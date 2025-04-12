@@ -1,9 +1,9 @@
-import { initialCustomers } from './DataTable.data';
+import { initialCustomers } from './components/DataTable/DataTable.data';
 import {
   EOrderDirection,
   EOrderKey,
   IDataTableStatus,
-} from './DataTable.models';
+} from './components/DataTable/DataTable.models';
 
 export const DATA_TABLE_STATUS_STORAGE_KEY = 'DATA_TABLE_STATUS';
 

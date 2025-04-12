@@ -3,6 +3,7 @@ import {
   EOrderKey,
   ICustomer,
   IDataTableStatus,
+  IFormData,
 } from './DataTable.models';
 
 export const getColumnOrderIcon = (
@@ -98,4 +99,71 @@ export const removeCustomers = (
     newCustomers = removeCustomer(newCustomers, customerID);
   });
   return newCustomers;
+};
+
+export const addCustomer = (
+  dataTableStatus: IDataTableStatus,
+  newCustomerID: string
+): ICustomer[] => {
+  const { name, surname, city, street } = dataTableStatus.formData as IFormData;
+  const newCustomer: ICustomer = {
+    uuid: newCustomerID,
+    name,
+    surname,
+    address: {
+      city,
+      street,
+    },
+  };
+  const newCustomers = [...dataTableStatus.customers];
+  newCustomers.push(newCustomer);
+  return newCustomers;
+};
+
+export const getFirstSelectedCustomerFormData = (
+  customers: ICustomer[],
+  selectedCustomerIDs: string[]
+): {
+  firstSelectedCustomerID: string;
+  firstSelectedCustomerFormData: IFormData;
+} => {
+  const selectedCustomers = customers.filter((customer) =>
+    selectedCustomerIDs.includes(customer.uuid)
+  );
+  const firstSelectedCustomerID = selectedCustomers[0].uuid;
+  const firstSelectedCustomer = selectedCustomers.find(
+    (customer) => customer.uuid === firstSelectedCustomerID
+  );
+  const firstSelectedCustomerFormData: IFormData = {
+    name: firstSelectedCustomer?.name || '',
+    surname: firstSelectedCustomer?.surname || '',
+    city: firstSelectedCustomer?.address.city || '',
+    street: firstSelectedCustomer?.address.street || '',
+  };
+  return { firstSelectedCustomerID, firstSelectedCustomerFormData };
+};
+
+export const editCustomer = (
+  dataTableStatus: IDataTableStatus
+): ICustomer[] => {
+  const { editingCustomerID, formData, customers } = dataTableStatus;
+  if (editingCustomerID === undefined) {
+    return customers;
+  }
+  const newCustomers = [...customers];
+  const customerToEdit = newCustomers.find(
+    (customer) => customer.uuid === dataTableStatus.editingCustomerID
+  );
+  if (customerToEdit) {
+    const { name, surname, city, street } = formData;
+    const newCustomer: ICustomer = {
+      ...customerToEdit,
+      name,
+      surname,
+      address: { city, street },
+    };
+    const customerToEditIndex = newCustomers.indexOf(customerToEdit);
+    newCustomers.splice(customerToEditIndex, 1, newCustomer);
+    return newCustomers;
+  } else return customers;
 };

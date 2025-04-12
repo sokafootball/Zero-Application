@@ -18,6 +18,7 @@ export interface IDataTableStatus {
   formData: IFormData;
   customerIDCounter: number;
   formOperation?: EFormOperation;
+  editingCustomerID?: string;
 }
 
 export enum EOrderKey {
