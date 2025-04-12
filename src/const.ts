@@ -13,4 +13,12 @@ export const DEFAULT_TABLE_STATUS: IDataTableStatus = {
   customers: initialCustomers,
   selectedCustomerIDs: [],
   filterString: '',
+  showForm: false,
+  customerIDCounter: 2,
+  formData: {
+    name: '',
+    surname: '',
+    city: '',
+    street: '',
+  },
 };

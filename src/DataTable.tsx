@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
 import './DataTable.css';
 import {
+  EFormOperation,
   EOrderDirection,
   EOrderKey,
+  ICustomer,
   IDataTableStatus,
+  IFormData,
 } from './DataTable.models';
 import { useDataTableStatus } from './hooks';
 import { DEFAULT_TABLE_STATUS } from './const';
@@ -25,7 +28,7 @@ import {
 // Realizzare la funzionalità (anche in questo caso non è importante la presentazione grafica).
 
 // Come scriveresti le REST API?
-function DataTable() {
+export const DataTable = () => {
   const [dataTableStatus, setDataTableStatus] =
     useDataTableStatus(DEFAULT_TABLE_STATUS);
   useEffect(() => {}, []);
@@ -46,7 +49,6 @@ function DataTable() {
       selectedCustomerIDs: selectedCustomers,
     });
   };
-  // console.log('dataTableStatus: ', dataTableStatus);
   const orderedCustomers = getOrderedCustomers(dataTableStatus);
   const filteredCustomers = getFilteredCustomers(
     dataTableStatus.filterString,
@@ -70,12 +72,60 @@ function DataTable() {
     const { customers, selectedCustomerIDs } =
       dataTableStatus as IDataTableStatus;
     const newCustomers = removeCustomers(customers, selectedCustomerIDs);
-    // console.log('newCustomers: ', newCustomers);
     setDataTableStatus({ ...dataTableStatus, customers: newCustomers });
+  };
+  console.log('dataTableStatus: ', dataTableStatus);
+
+  const handleNew = () => {
+    setDataTableStatus((prevState: IDataTableStatus) => ({
+      ...prevState,
+      showForm: true,
+      formOperation: EFormOperation.ADD,
+    }));
+  };
+
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    formField: keyof IFormData
+  ) => {
+    const newFormData: IFormData = {
+      ...dataTableStatus.formData,
+      [formField]: e.target.value,
+    };
+    setDataTableStatus((prevState: IDataTableStatus) => ({
+      ...prevState,
+      formData: newFormData,
+    }));
+  };
+
+  const handleFormSubmit = () => {
+    const newCustomerID = ++(dataTableStatus as IDataTableStatus)
+      .customerIDCounter;
+    const { name, surname, city, street } =
+      dataTableStatus.formData as IFormData;
+    const newCustomer: ICustomer = {
+      uuid: newCustomerID.toString(),
+      name,
+      surname,
+      address: {
+        city,
+        street,
+      },
+    };
+    const newCustomers = [...dataTableStatus.customers];
+    newCustomers.push(newCustomer);
+    setDataTableStatus((prevState: IDataTableStatus) => ({
+      ...prevState,
+      customerIDCounter: newCustomerID,
+      customers: newCustomers,
+      showForm: false,
+      formData: DEFAULT_TABLE_STATUS.formData,
+    }));
   };
 
   return (
     <>
+      <label>Filter</label>
       <input
         type='text'
         onChange={(e) => {
@@ -169,8 +219,39 @@ function DataTable() {
           </tr>
         </tfoot>
       </table>
+      {dataTableStatus.showForm && (
+        <div className='form'>
+          <label>Name</label>
+          <input
+            type='text'
+            value={(dataTableStatus as IDataTableStatus).formData.name}
+            onChange={(e) => handleFormChange(e, 'name')}
+          />
+          <label>Surname</label>
+          <input
+            type='text'
+            value={(dataTableStatus as IDataTableStatus).formData.surname}
+            onChange={(e) => handleFormChange(e, 'surname')}
+          />
+          <label>City</label>
+          <input
+            type='text'
+            value={(dataTableStatus as IDataTableStatus).formData.city}
+            onChange={(e) => handleFormChange(e, 'city')}
+          />
+          <label>Street</label>
+          <input
+            type='text'
+            value={(dataTableStatus as IDataTableStatus).formData.street}
+            onChange={(e) => handleFormChange(e, 'street')}
+          />
+          <button type='button' onClick={handleFormSubmit}>
+            {dataTableStatus.formOperation}
+          </button>
+        </div>
+      )}
     </>
   );
-}
+};
 
 export default DataTable;

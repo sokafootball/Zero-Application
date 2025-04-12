@@ -14,6 +14,10 @@ export interface IDataTableStatus {
   customers: ICustomer[];
   selectedCustomerIDs: string[];
   filterString: string;
+  showForm: boolean;
+  formData: IFormData;
+  customerIDCounter: number;
+  formOperation?: EFormOperation;
 }
 
 export enum EOrderKey {
@@ -24,4 +28,15 @@ export enum EOrderKey {
 export enum EOrderDirection {
   ASC = 'ASC',
   DES = 'DES',
+}
+export enum EFormOperation {
+  ADD = 'ADD',
+  EDIT = 'EDIT',
+}
+
+export interface IFormData {
+  name: string;
+  surname: string;
+  city: string;
+  street: string;
 }
