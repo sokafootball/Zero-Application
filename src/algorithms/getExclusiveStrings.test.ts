@@ -29,7 +29,7 @@ describe('getExclusiveStrings', () => {
       ['apple', 'banana', 'apple', 'orange'],
       ['banana', 'kiwi', 'kiwi', 'orange', 'pear']
     );
-    expect(result).toEqual(['apple', 'apple', 'kiwi', 'kiwi', 'pear']);
+    expect(result).toEqual(['apple', 'kiwi', 'pear']);
   });
 
   it('should handle cases with no exclusive strings', () => {

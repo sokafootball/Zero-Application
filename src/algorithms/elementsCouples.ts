@@ -1,7 +1,5 @@
-export const getElementsCouples = (
-  array: unknown[]
-): (unknown[] | unknown)[] => {
-  const pairs: (unknown[] | unknown)[] = [];
+export const getElementsCouples = (array: string[]): (string[] | string)[] => {
+  const pairs: (string[] | string)[] = [];
   const availableElements = [...array];
 
   while (availableElements.length >= 2) {

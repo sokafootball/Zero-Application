@@ -6,17 +6,17 @@ export const getExclusiveStrings = (
   const set2 = new Set(arr2);
   const exclusiveStrings: string[] = [];
 
-  for (const str of arr1) {
-    if (!set2.has(str)) {
-      exclusiveStrings.push(str);
+  set1.forEach((string) => {
+    if (!set2.has(string)) {
+      exclusiveStrings.push(string);
     }
-  }
+  });
 
-  for (const str of arr2) {
-    if (!set1.has(str)) {
-      exclusiveStrings.push(str);
+  set2.forEach((string) => {
+    if (!set1.has(string)) {
+      exclusiveStrings.push(string);
     }
-  }
+  });
 
   return exclusiveStrings;
 };
