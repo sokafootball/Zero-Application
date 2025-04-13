@@ -16,7 +16,7 @@
    Se per logiche di business esterne allo scope dell'esercizio ci fossero dei dati richiesti in input per fare le chiamate, gestirei lo skip delle chiamate stesse in caso di mancanza di questi dati.
 4. BUFFER
 
-   ```
+   ```typescript
    class Buffer<T> {
         private buffer: T[] = [];
 
